@@ -9,17 +9,17 @@ public class Image {
     @GeneratedValue
     int id;
     String description;
-    String dimentions;
+    String dimensions;
     @ManyToOne(cascade = CascadeType.ALL)
     Blog blog;
 
     public Image() {
     }
 
-    public Image(int id, String description, String dimentions, Blog blog) {
+    public Image(int id, String description, String dimensions, Blog blog) {
         this.id = id;
         this.description = description;
-        this.dimentions = dimentions;
+        this.dimensions = dimensions;
         this.blog = blog;
     }
 
@@ -39,12 +39,12 @@ public class Image {
         this.description = description;
     }
 
-    public String getDimentions() {
-        return dimentions;
+    public String getDimensions() {
+        return dimensions;
     }
 
-    public void setDimentions(String dimentions) {
-        this.dimentions = dimentions;
+    public void setDimensions(String dimentions) {
+        this.dimensions = dimentions;
     }
 
     public Blog getBlog() {

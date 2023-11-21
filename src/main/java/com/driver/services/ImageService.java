@@ -2,10 +2,7 @@ package com.driver.services;
 
 import com.driver.models.*;
 import com.driver.repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ImageService {
@@ -23,7 +20,7 @@ public class ImageService {
         Blog blog = blogRepository.findById(blogId).orElse(null);
         Image image = new Image();
         image.setDescription(description);
-        image.setDimentions(dimensions);
+        image.setDimensions(dimensions);
         if(blog == null) return image;
 
         image.setBlog(blog);
@@ -40,7 +37,7 @@ public class ImageService {
         if(image == null) return 0;
 
         String[] screenXY = screenDimensions.split("X");
-        String imageDimensions = image.getDimentions();
+        String imageDimensions = image.getDimensions();
         String[] imageXY = imageDimensions.split("X");
 
         int x = Integer.parseInt(screenXY[0])/ Integer.parseInt(imageXY[0]);
