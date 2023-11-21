@@ -2,6 +2,7 @@ package com.driver.models;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
@@ -13,17 +14,20 @@ public class User {
     String password;
     String firstName = "test";
     String lastName = "test";
+    @OneToMany(mappedBy = "user")
+    List<Blog> blogList;
 
 
     public User() {
     }
 
-    public User(int id, String username, String password, String firstName, String lastName) {
+    public User(int id, String username, String password, String firstName, String lastName, List<Blog> blogList) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.blogList = blogList;
     }
 
     public int getId() {
@@ -64,5 +68,13 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public List<Blog> getBlogList() {
+        return blogList;
+    }
+
+    public void setBlogList(List<Blog> blogList) {
+        this.blogList = blogList;
     }
 }
