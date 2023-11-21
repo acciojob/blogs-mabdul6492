@@ -10,22 +10,42 @@ import java.util.List;
 @Service
 public class ImageService {
 
-    @Autowired
-    BlogRepository blogRepository2;
-    @Autowired
-    ImageRepository imageRepository2;
+    BlogRepository blogRepository;
+    ImageRepository imageRepository;
+
+    public ImageService(BlogRepository blogRepository, ImageRepository imageRepository) {
+        this.blogRepository = blogRepository;
+        this.imageRepository = imageRepository;
+    }
 
     public Image addImage(Integer blogId, String description, String dimensions){
         //add an image to the blog
+        Blog blog = blogRepository.findById(blogId).orElse(null);
+        Image image = new Image();
+        image.setDescription(description);
+        image.setDimentions(dimensions);
+        if(blog == null) return image;
 
+        image.setBlog(blog);
+        return imageRepository.save(image);
     }
 
     public void deleteImage(Integer id){
-
+        imageRepository.deleteById(id);
     }
 
     public int countImagesInScreen(Integer id, String screenDimensions) {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
+        Image image = imageRepository.findById(id).orElse(null);
+        if(image == null) return 0;
 
+        String[] screenXY = screenDimensions.split("X");
+        String imageDimensions = image.getDimentions();
+        String[] imageXY = imageDimensions.split("X");
+
+        int x = Integer.parseInt(screenXY[0])/ Integer.parseInt(imageXY[0]);
+        int y = Integer.parseInt(screenXY[1])/ Integer.parseInt(imageXY[1]);
+
+        return x*y;
     }
 }
