@@ -27,10 +27,13 @@ public class BlogService {
 
         User user = userRepository.findById(userId).orElse(null);
         if(user == null) return blog;
-        user.getBlogList().add(blog);
-        blog.setUser(user);
 
-        return blogRepository.save(blog);
+        user.getBlogList().add(blog);
+        userRepository.save(user);
+        blog.setUser(user);
+        blogRepository.save(blog);
+
+        return blog;
 
     }
 
