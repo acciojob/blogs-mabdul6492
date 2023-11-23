@@ -4,6 +4,7 @@ import com.driver.models.Blog;
 import com.driver.models.User;
 import com.driver.repositories.BlogRepository;
 import com.driver.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -11,13 +12,11 @@ import java.util.Optional;
 
 @Service
 public class BlogService {
-    BlogRepository blogRepository;
-    UserRepository userRepository;
+    @Autowired
+    BlogRepository blogRepository1;
 
-    public BlogService(BlogRepository blogRepository, UserRepository userRepository) {
-        this.blogRepository = blogRepository;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    UserRepository userRepository1;
 
     public Blog createAndReturnBlog(Integer userId, String title, String content) {
         //create a blog at the current time
@@ -26,26 +25,26 @@ public class BlogService {
         blog.setContent(content);
         blog.setPubDate(new Date());
 
-        Optional<User> userOptional = userRepository.findById(userId);
-        if(!userOptional.isPresent()) return null;
+        Optional<User> userOptional = userRepository1.findById(userId);
+        if(userOptional.isPresent()) {
+            User user = userOptional.get();
+            blog.setUser(user);
 
-        User user = userOptional.get();
-        user.getBlogList().add(blog);
-        blog.setUser(user);
-        userRepository.save(user);
-        blogRepository.save(blog);
-
-        return blog;
-
+            blogRepository1.save(blog);
+            user.getBlogList().add(blog);
+            userRepository1.save(user);
+            return blog;
+        }
+        return null;
     }
 
     public void deleteBlog(int blogId){
         //delete blog and corresponding images
-        Optional<Blog> blogOptional = blogRepository.findById(blogId);
-        if(!blogOptional.isPresent()) return;
-
-        Blog blog = blogOptional.get();
-        blog.getImageList().clear();
-        blogRepository.deleteById(blogId);
+        Optional<Blog> blogOptional = blogRepository1.findById(blogId);
+        if(blogOptional.isPresent()) {
+            Blog blog = blogOptional.get();
+            blog.getImageList().clear();
+        }
+        blogRepository1.deleteById(blogId);
     }
 }
