@@ -6,12 +6,12 @@ import javax.persistence.*;
 public class Image {
 
     @Id
-    @GeneratedValue
-    int id;
-    String description;
-    String dimensions;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String description;
+    private String dimensions;
     @ManyToOne(cascade = CascadeType.ALL)
-    Blog blog;
+    private Blog blog;
 
     public Image() {
     }

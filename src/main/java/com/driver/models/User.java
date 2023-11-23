@@ -8,14 +8,14 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
-    int id;
-    String username;
-    String password;
-    String firstName = "test";
-    String lastName = "test";
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String username;
+    private String password;
+    private String firstName = "test";
+    private String lastName = "test";
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<Blog> blogList;
+    private List<Blog> blogList;
 
 
     public User() {
