@@ -4,6 +4,8 @@ import com.driver.models.*;
 import com.driver.repositories.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ImageService {
 
@@ -21,9 +23,10 @@ public class ImageService {
         image.setDescription(description);
         image.setDimensions(dimensions);
 
-        Blog blog = blogRepository.findById(blogId).orElse(null);
-        if(blog == null) return image;
+        Optional<Blog> blogOptional = blogRepository.findById(blogId);
+        if(!blogOptional.isPresent()) return null;
 
+        Blog blog = blogOptional.get();
         image.setBlog(blog);
         blog.getImageList().add(image);
         blogRepository.save(blog);
@@ -37,9 +40,10 @@ public class ImageService {
 
     public int countImagesInScreen(Integer id, String screenDimensions) {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
-        Image image = imageRepository.findById(id).orElse(null);
-        if(image == null) return 0;
+        Optional<Image> imageOptional = imageRepository.findById(id);
+        if(!imageOptional.isPresent()) return 0;
 
+        Image image = imageOptional.get();
         String[] screenXY = screenDimensions.split("X");
         String imageDimensions = image.getDimensions();
         String[] imageXY = imageDimensions.split("X");

@@ -7,6 +7,7 @@ import com.driver.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class BlogService {
@@ -25,12 +26,13 @@ public class BlogService {
         blog.setContent(content);
         blog.setPubDate(new Date());
 
-        User user = userRepository.findById(userId).orElse(null);
-        if(user == null) return blog;
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(!userOptional.isPresent()) return null;
 
+        User user = userOptional.get();
         user.getBlogList().add(blog);
-        userRepository.save(user);
         blog.setUser(user);
+        userRepository.save(user);
         blogRepository.save(blog);
 
         return blog;
@@ -39,9 +41,10 @@ public class BlogService {
 
     public void deleteBlog(int blogId){
         //delete blog and corresponding images
-        Blog blog = blogRepository.findById(blogId).orElse(null);
-        if(blog == null) return;
+        Optional<Blog> blogOptional = blogRepository.findById(blogId);
+        if(!blogOptional.isPresent()) return;
 
+        Blog blog = blogOptional.get();
         blog.getImageList().clear();
         blogRepository.deleteById(blogId);
     }

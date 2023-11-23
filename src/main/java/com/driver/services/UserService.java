@@ -4,6 +4,8 @@ import com.driver.models.*;
 import com.driver.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -17,23 +19,29 @@ public class UserService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        return user;
     }
 
     public void deleteUser(int userId){
-        User user = userRepository.findById(userId).orElse(null);
-        if(user == null) return;
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(!userOptional.isPresent()) return;
 
+        User user = userOptional.get();
         user.getBlogList().clear();
         userRepository.deleteById(userId);
     }
 
     public User updateUser(Integer id, String password){
-        User user = userRepository.findById(id).orElse(null);
+        Optional<User> userOptional = userRepository.findById(id);
 
-        if(user == null) return null;
+        if(!userOptional.isPresent()) return null;
 
+        User user = userOptional.get();
         user.setPassword(password);
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        return user;
     }
 }
