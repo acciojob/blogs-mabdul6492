@@ -24,10 +24,9 @@ public class ImageService {
         Blog blog = blogRepository.findById(blogId).orElse(null);
         if(blog == null) return image;
 
+        image.setBlog(blog);
         blog.getImageList().add(image);
         blogRepository.save(blog);
-        image.setBlog(blog);
-        imageRepository.save(image);
 
         return image;
     }
