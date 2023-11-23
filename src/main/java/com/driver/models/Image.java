@@ -10,7 +10,7 @@ public class Image {
     private int id;
     private String description;
     private String dimensions;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Blog blog;
 
     public Image() {
