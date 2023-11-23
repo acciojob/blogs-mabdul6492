@@ -2,7 +2,6 @@ package com.driver.services;
 
 import com.driver.models.*;
 import com.driver.repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -10,15 +9,13 @@ import java.util.Optional;
 @Service
 public class ImageService {
 
-    @Autowired
     BlogRepository blogRepository;
-    @Autowired
     ImageRepository imageRepository;
 
-//    public ImageService(BlogRepository blogRepository, ImageRepository imageRepository) {
-//        this.blogRepository = blogRepository;
-//        this.imageRepository = imageRepository;
-//    }
+    public ImageService(BlogRepository blogRepository, ImageRepository imageRepository) {
+        this.blogRepository = blogRepository;
+        this.imageRepository = imageRepository;
+    }
 
     public Image addImage(Integer blogId, String description, String dimensions){
         //add an image to the blog
@@ -44,7 +41,7 @@ public class ImageService {
     public int countImagesInScreen(Integer id, String screenDimensions) {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
         Optional<Image> imageOptional = imageRepository.findById(id);
-        if(!imageOptional.isPresent()) return 0;
+        if(!imageOptional.isPresent()) return -1;
 
         Image image = imageOptional.get();
         String[] screenXY = screenDimensions.split("X");

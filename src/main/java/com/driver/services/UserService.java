@@ -2,7 +2,6 @@ package com.driver.services;
 
 import com.driver.models.*;
 import com.driver.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -10,12 +9,11 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
     UserRepository userRepository;
 
-//    public UserService(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User createUser(String username, String password){
         User user = new User();
