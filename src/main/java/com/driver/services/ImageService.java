@@ -1,10 +1,7 @@
 package com.driver.services;
 
-import com.driver.models.Blog;
-import com.driver.models.Image;
-import com.driver.repositories.BlogRepository;
-import com.driver.repositories.ImageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.driver.models.*;
+import com.driver.repositories.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,10 +9,13 @@ import java.util.Optional;
 @Service
 public class ImageService {
 
-    @Autowired
-    BlogRepository blogRepository2;
-    @Autowired
-    ImageRepository imageRepository2;
+    BlogRepository blogRepository;
+    ImageRepository imageRepository;
+
+    public ImageService(BlogRepository blogRepository, ImageRepository imageRepository) {
+        this.blogRepository = blogRepository;
+        this.imageRepository = imageRepository;
+    }
 
     public Image addImage(Integer blogId, String description, String dimensions){
         //add an image to the blog
@@ -23,38 +23,34 @@ public class ImageService {
         image.setDescription(description);
         image.setDimensions(dimensions);
 
-        Optional<Blog> blogOptional = blogRepository2.findById(blogId);
-        if(blogOptional.isPresent()) {
-            Blog blog = blogOptional.get();
-            image.setBlog(blog);
-            blog.getImageList().add(image);
-            blogRepository2.save(blog);
-            return image;
-        }
-        return null;
+        Optional<Blog> blogOptional = blogRepository.findById(blogId);
+        if(!blogOptional.isPresent()) return null;
+
+        Blog blog = blogOptional.get();
+        image.setBlog(blog);
+        blog.getImageList().add(image);
+        blogRepository.save(blog);
+
+        return image;
     }
 
     public void deleteImage(Integer id){
-        imageRepository2.deleteById(id);
+        imageRepository.deleteById(id);
     }
 
     public int countImagesInScreen(Integer id, String screenDimensions) {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
-        int count = -1;
-        Optional<Image> imageOptional = imageRepository2.findById(id);
-        if(imageOptional.isPresent()) {
-            String imageDimension = imageOptional.get().getDimensions();
-            String[] dimensionParts = imageDimension.split("X");
-            int inLen = Integer.parseInt(dimensionParts[0]);
-            int inWid = Integer.parseInt(dimensionParts[1]);
+        Optional<Image> imageOptional = imageRepository.findById(id);
+        if(!imageOptional.isPresent()) return -1;
 
-            dimensionParts = screenDimensions.split("X");
-            int outLen = Integer.parseInt(dimensionParts[0]);
-            int outWid = Integer.parseInt(dimensionParts[1]);
+        Image image = imageOptional.get();
+        String[] screenXY = screenDimensions.split("X");
+        String imageDimensions = image.getDimensions();
+        String[] imageXY = imageDimensions.split("X");
 
-            int c = (outLen/inLen) * (outWid/inWid);
-            count = c;
-        }
-        return count;
+        int x = Integer.parseInt(screenXY[0])/ Integer.parseInt(imageXY[0]);
+        int y = Integer.parseInt(screenXY[1])/ Integer.parseInt(imageXY[1]);
+
+        return x*y;
     }
 }
