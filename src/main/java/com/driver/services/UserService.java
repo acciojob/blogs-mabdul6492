@@ -1,45 +1,47 @@
 package com.driver.services;
 
-import com.driver.models.User;
+import com.driver.models.*;
 import com.driver.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class UserService {
-    @Autowired
-    UserRepository userRepository3;
+
+    UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User createUser(String username, String password){
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        user.setFirstName("test");
-        user.setLastName("test");
+        userRepository.save(user);
 
-        userRepository3.save(user);
         return user;
     }
 
     public void deleteUser(int userId){
-        Optional<User> userOptional = userRepository3.findById(userId);
+        Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isPresent()) {
             User user = userOptional.get();
             user.getBlogList().clear();
         }
-        userRepository3.deleteById(userId);
+        userRepository.deleteById(userId);
     }
 
     public User updateUser(Integer id, String password){
-        Optional<User> userOptional = userRepository3.findById(id);
-        if(userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setPassword(password);
-            userRepository3.save(user);
-            return user;
-        }
-        return null;
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if(!userOptional.isPresent()) return null;
+
+        User user = userOptional.get();
+        user.setPassword(password);
+        userRepository.save(user);
+
+        return user;
     }
 }
