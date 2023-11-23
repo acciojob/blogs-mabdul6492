@@ -8,15 +8,15 @@ import java.util.List;
 public class Blog {
 
     @Id
-    @GeneratedValue
-    int id;
-    String title;
-    String content;
-    Date pubDate;
-    @OneToMany(mappedBy = "blog")
-    List<Image> imageList;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String title;
+    private String content;
+    private Date pubDate;
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
+    private List<Image> imageList;
     @ManyToOne(cascade = CascadeType.ALL)
-    User user;
+    private User user;
 
     public Blog() {
     }

@@ -6,6 +6,8 @@ import com.driver.repositories.BlogRepository;
 import com.driver.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class BlogService {
     BlogRepository blogRepository;
@@ -18,10 +20,12 @@ public class BlogService {
 
     public Blog createAndReturnBlog(Integer userId, String title, String content) {
         //create a blog at the current time
-        User user = userRepository.findById(userId).orElse(null);
         Blog blog = new Blog();
         blog.setTitle(title);
         blog.setContent(content);
+        blog.setPubDate(new Date());
+
+        User user = userRepository.findById(userId).orElse(null);
         if(user == null) return blog;
         user.getBlogList().add(blog);
         blog.setUser(user);
